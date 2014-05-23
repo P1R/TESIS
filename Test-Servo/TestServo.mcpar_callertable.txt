@@ -1,0 +1,22 @@
+main
+	InitMain
+		GPIO_Digital_Input
+			GPIO_Config
+				GPIO_Clk_Enable
+	PWM_TIM1_Init
+		PWM_TIMx_Init
+			Get_Fosc_kHz
+	PWM_TIM4_Init
+		PWM_TIMx_Init
+	PWM_TIM1_Set_Duty
+		PWM_TIMx_Set_Duty
+	PWM_TIM4_Set_Duty
+		PWM_TIMx_Set_Duty
+	PWM_TIM1_Start
+		PWM_TIMx_Start
+			GPIO_Alternate_Function_Enable
+				GPIO_Configure_Pin
+					GPIO_Config
+	PWM_TIM4_Start
+		PWM_TIMx_Start
+	__FillZeros
