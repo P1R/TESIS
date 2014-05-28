@@ -8896,6 +8896,7 @@ comif
 comif_bit
 comif_tim15_sr_bit
 comif_tim8_sr_bit
+conf_puertos
 configs
 configs
 configs
@@ -9267,7 +9268,6 @@ ctxpkt
 ctxpkt_bit
 current
 current_duty
-current_duty1
 current0
 current0_bit
 current1
@@ -16741,6 +16741,7 @@ htl9_bit
 hu
 hu
 hu_bit
+i
 i2c1_ccr
 i2c1_ccrbits
 i2c1_cr1
@@ -17854,7 +17855,6 @@ ineptxsa9
 ineptxsa9_bit
 ineptxsa9_usb_otg_global_fs_dieptxf2_bit
 ineptxsa9_usb_otg_global_fs_dieptxf3_bit
-initmain
 inrq
 inrq
 inrq
@@ -18747,6 +18747,7 @@ l3
 l3_adc2_sqr1_bit
 l3_adc3_sqr1_bit
 l3_bit
+lampara
 last
 last
 last
@@ -22535,7 +22536,6 @@ ois4
 ois4_bit
 ois4_tim8_cr2_bit
 old_duty
-old_duty1
 omfc
 omfc
 omfc_bit
@@ -25908,7 +25908,6 @@ pvu
 pvu
 pvu_bit
 pwm_period1
-pwm_period2
 pwm_tim1_init
 pwm_tim1_set_duty
 pwm_tim1_start

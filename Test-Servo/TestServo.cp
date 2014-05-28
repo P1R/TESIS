@@ -1,62 +1,33 @@
-#line 1 "C:/Users/p1r0/Desktop/Sistemas de tiempo real/ProyectoFinal/Test-Servo/TestServo.c"
-unsigned int current_duty, old_duty, current_duty1, old_duty1;
-unsigned int pwm_period1, pwm_period2;
+#line 1 "C:/Users/JorgeAlejandro/Documents/GitHub/TESIS/Test-Servo/TestServo.c"
+unsigned int current_duty, old_duty, i;
+unsigned int pwm_period1;
+sbit LAMPARA at GPIOC_ODRbits.B8;
 
-void InitMain() {
- GPIO_Digital_Input (&GPIOA_BASE, _GPIO_PINMASK_3 | _GPIO_PINMASK_4 | _GPIO_PINMASK_5 | _GPIO_PINMASK_6);
+void Conf_puertos(void)
+{
+ GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
+ GPIO_Digital_Output(&GPIOC_BASE,_GPIO_PINMASK_8);
 }
 
+
 void main() {
- InitMain();
- current_duty = 100;
- current_duty1 = 100;
+ Conf_puertos();
+ LAMPARA = 1;
+ current_duty =100;
+ pwm_period1 = PWM_TIM2_Init(50);
+ PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
+ PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 
- pwm_period1 = PWM_TIM1_Init(5000);
- pwm_period2 = PWM_TIM4_Init(5000);
-
- PWM_TIM1_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL1);
- PWM_TIM4_Set_Duty(current_duty1, _PWM_NON_INVERTED, _PWM_CHANNEL2);
-
- PWM_TIM1_Start(_PWM_CHANNEL1, &_GPIO_MODULE_TIM1_CH1_PE9);
- PWM_TIM4_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM4_CH2_PD13);
-
- while (1) {
- if (GPIOA_IDR.B3) {
+ while (1){
+ if(GPIOA_IDR.B0){
+ LAMPARA = ~LAMPARA;
  Delay_ms(1);
- current_duty = current_duty + 5;
+ current_duty = current_duty + 100;
  if (current_duty > pwm_period1) {
- current_duty = 0;
+ current_duty = 1;
  }
- PWM_TIM1_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL1);
+ PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  }
-
- if (GPIOA_IDR.B4) {
- Delay_ms(1);
- current_duty = current_duty - 5;
- if (current_duty > pwm_period1) {
- current_duty = pwm_period1;
- }
- PWM_TIM1_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL1);
- }
-
- if (GPIOA_IDR.B5) {
- Delay_ms(1);
- current_duty1 = current_duty1 + 5;
- if (current_duty1 > pwm_period2) {
- current_duty1 = 0;
- }
- PWM_TIM4_Set_Duty(current_duty1, _PWM_NON_INVERTED, _PWM_CHANNEL2);
- }
-
- if (GPIOA_IDR.B6) {
- Delay_ms(1);
- current_duty1 = current_duty1 - 5;
- if (current_duty1 > pwm_period2) {
- current_duty1 = pwm_period2;
- }
- PWM_TIM4_Set_Duty(current_duty1, _PWM_NON_INVERTED, _PWM_CHANNEL2);
- }
-
  Delay_ms(1);
  }
 }
