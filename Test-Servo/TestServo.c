@@ -4,7 +4,7 @@ sbit LAMPARA at GPIOC_ODRbits.B8;
 
 void Conf_puertos(void)
 {
- GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
+ GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0 | _GPIO_PINMASK_2);
  GPIO_Digital_Output(&GPIOC_BASE,_GPIO_PINMASK_8);
 }
 
@@ -12,7 +12,7 @@ void Conf_puertos(void)
 void main() {
   Conf_puertos();
   //LAMPARA = 1;
-  current_duty =500;                        // initial value for current_duty
+  current_duty =700;                        // initial value for current_duty
   pwm_period1 = PWM_TIM2_Init(50);
   PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
   PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
@@ -22,12 +22,22 @@ void main() {
       //LAMPARA = ~LAMPARA;
       Delay_ms(1);
        current_duty = current_duty + 10;       // increment current_duty
-        if (current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
+        if(current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
            current_duty = 1;                    // reset current_duty value to zero
         }
        PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
        PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
       }
-    Delay_ms(1);                             // slow down change pace a little
+      else if(GPIOA_IDR.B2){
+      Delay_ms(1);
+       current_duty = current_duty - 10;       // increment current_duty
+        if(current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
+           current_duty = 1;                 // reset current_duty value to zero
+        }
+       PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
+       PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+      }
+      else
+           Delay_ms(1);                             // slow down change pace a little
     }
 }

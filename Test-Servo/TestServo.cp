@@ -5,7 +5,7 @@ sbit LAMPARA at GPIOC_ODRbits.B8;
 
 void Conf_puertos(void)
 {
- GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
+ GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0 | _GPIO_PINMASK_2);
  GPIO_Digital_Output(&GPIOC_BASE,_GPIO_PINMASK_8);
 }
 
@@ -13,7 +13,7 @@ void Conf_puertos(void)
 void main() {
  Conf_puertos();
 
- current_duty =500;
+ current_duty =700;
  pwm_period1 = PWM_TIM2_Init(50);
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
@@ -23,12 +23,23 @@ void main() {
 
  Delay_ms(1);
  current_duty = current_duty + 10;
- if (current_duty > pwm_period1) {
- current_duty = 1;
+ if(current_duty > pwm_period1) {
+ current_duty = 666;
  }
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
  }
+ else if(GPIOA_IDR.B2){
+ Delay_ms(1);
+ current_duty = current_duty - 10;
+ if(current_duty < 700) {
+
+ break;
+ }
+ PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
+ PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
+ }
+ else
  Delay_ms(1);
  }
 }

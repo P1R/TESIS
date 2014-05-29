@@ -2,8 +2,8 @@ _Conf_puertos:
 ;TestServo.c,5 :: 		void Conf_puertos(void)
 SUB	SP, SP, #4
 STR	LR, [SP, #0]
-;TestServo.c,7 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
-MOVW	R1, #1
+;TestServo.c,7 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0 | _GPIO_PINMASK_2);
+MOVS	R1, #5
 MOVW	R0, #lo_addr(GPIOA_BASE+0)
 MOVT	R0, #hi_addr(GPIOA_BASE+0)
 BL	_GPIO_Digital_Input+0
@@ -23,8 +23,8 @@ _main:
 SUB	SP, SP, #4
 ;TestServo.c,13 :: 		Conf_puertos();
 BL	_Conf_puertos+0
-;TestServo.c,15 :: 		current_duty =500;                        // initial value for current_duty
-MOVW	R1, #500
+;TestServo.c,15 :: 		current_duty =700;                        // initial value for current_duty
+MOVW	R1, #700
 MOVW	R0, #lo_addr(_current_duty+0)
 MOVT	R0, #hi_addr(_current_duty+0)
 STR	R0, [SP, #0]
@@ -72,15 +72,15 @@ LDRH	R0, [R2, #0]
 ADDW	R1, R0, #10
 UXTH	R1, R1
 STRH	R1, [R2, #0]
-;TestServo.c,25 :: 		if (current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
+;TestServo.c,25 :: 		if(current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
 MOVW	R0, #lo_addr(_pwm_period1+0)
 MOVT	R0, #hi_addr(_pwm_period1+0)
 LDRH	R0, [R0, #0]
 CMP	R1, R0
 IT	LS
 BLS	L_main5
-;TestServo.c,26 :: 		current_duty = 1;                    // reset current_duty value to zero
-MOVS	R1, #1
+;TestServo.c,26 :: 		current_duty = 666;                    // reset current_duty value to zero
+MOVW	R1, #666
 MOVW	R0, #lo_addr(_current_duty+0)
 MOVT	R0, #hi_addr(_current_duty+0)
 STRH	R1, [R0, #0]
@@ -99,21 +99,75 @@ MOVT	R1, #hi_addr(__GPIO_MODULE_TIM2_CH2_PA1+0)
 MOVS	R0, #1
 BL	_PWM_TIM2_Start+0
 ;TestServo.c,30 :: 		}
+IT	AL
+BAL	L_main6
 L_main2:
-;TestServo.c,31 :: 		Delay_ms(1);                             // slow down change pace a little
+;TestServo.c,31 :: 		else if(GPIOA_IDR.B2){
+MOVW	R1, #lo_addr(GPIOA_IDR+0)
+MOVT	R1, #hi_addr(GPIOA_IDR+0)
+LDR	R0, [R1, #0]
+CMP	R0, #0
+IT	EQ
+BEQ	L_main7
+;TestServo.c,32 :: 		Delay_ms(1);
 MOVW	R7, #2665
 MOVT	R7, #0
 NOP
 NOP
-L_main6:
+L_main8:
 SUBS	R7, R7, #1
-BNE	L_main6
+BNE	L_main8
 NOP
 NOP
-;TestServo.c,32 :: 		}
+;TestServo.c,33 :: 		current_duty = current_duty - 10;       // increment current_duty
+MOVW	R1, #lo_addr(_current_duty+0)
+MOVT	R1, #hi_addr(_current_duty+0)
+LDRH	R0, [R1, #0]
+SUBS	R0, #10
+UXTH	R0, R0
+STRH	R0, [R1, #0]
+;TestServo.c,34 :: 		if(current_duty < 700) {      // if we increase current_duty greater then possible pwm_period1 value
+CMP	R0, #700
+IT	CS
+BCS	L_main10
+;TestServo.c,36 :: 		break;                    // reset current_duty value to zero
+IT	AL
+BAL	L_main1
+;TestServo.c,37 :: 		}
+L_main10:
+;TestServo.c,38 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
+MOVW	R0, #lo_addr(_current_duty+0)
+MOVT	R0, #hi_addr(_current_duty+0)
+LDRH	R0, [R0, #0]
+MOVS	R2, #1
+MOVS	R1, #0
+BL	_PWM_TIM2_Set_Duty+0
+;TestServo.c,39 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+MOVW	R1, #lo_addr(__GPIO_MODULE_TIM2_CH2_PA1+0)
+MOVT	R1, #hi_addr(__GPIO_MODULE_TIM2_CH2_PA1+0)
+MOVS	R0, #1
+BL	_PWM_TIM2_Start+0
+;TestServo.c,40 :: 		}
+IT	AL
+BAL	L_main11
+L_main7:
+;TestServo.c,42 :: 		Delay_ms(1);                             // slow down change pace a little
+MOVW	R7, #2665
+MOVT	R7, #0
+NOP
+NOP
+L_main12:
+SUBS	R7, R7, #1
+BNE	L_main12
+NOP
+NOP
+L_main11:
+L_main6:
+;TestServo.c,43 :: 		}
 IT	AL
 BAL	L_main0
-;TestServo.c,33 :: 		}
+L_main1:
+;TestServo.c,44 :: 		}
 L_end_main:
 L__main_end_loop:
 B	L__main_end_loop
