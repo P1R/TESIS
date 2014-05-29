@@ -20,12 +20,8 @@ _main:
   begin   (midx: 0)
 //TestServo.c,13 :: 		Conf_puertos();
 	CALL _Conf_puertos   (midx: 0)
-//TestServo.c,14 :: 		LAMPARA = 1;
-	R1 <1> <- 1   (midx: 0)
-	R0 <4> <- addr(LAMPARA)   (midx: 0)
-	[R0] <0> <- R1   (midx: 0)
-//TestServo.c,15 :: 		current_duty =100;                        // initial value for current_duty
-	R1 <2> <- 100   (midx: 0)
+//TestServo.c,15 :: 		current_duty =500;                        // initial value for current_duty
+	R1 <2> <- 500   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	FLOC_main+0 <4> <- R0   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
@@ -52,11 +48,6 @@ _main:
 	R1 <4> <- addr(GPIOA_IDR)   (midx: 0)
 	R0 <4> <- [R1]   (midx: 0)
 	if (!R0) then goto 2   (midx: 0)
-//TestServo.c,22 :: 		LAMPARA = ~LAMPARA;
-	R1 <4> <- addr(LAMPARA)   (midx: 0)
-	R0 <4> <- [R1]   (midx: 0)
-	R0 <1> <- ~R0   (midx: 20)
-	[R1] <0> <- R0   (midx: 0)
 //TestServo.c,23 :: 		Delay_ms(1);
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -68,10 +59,10 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,24 :: 		current_duty = current_duty + 100;       // increment current_duty
+//TestServo.c,24 :: 		current_duty = current_duty + 10;       // increment current_duty
 	R2 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R2]   (midx: 0)
-	R1 <2> <-  R0 + 100   (midx: 1)
+	R1 <2> <-  R0 + 10   (midx: 1)
 	[R2] <2> <- R1   (midx: 0)
 //TestServo.c,25 :: 		if (current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
 	R0 <4> <- addr(_pwm_period1)   (midx: 0)
@@ -90,9 +81,13 @@ _main:
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,29 :: 		}
+//TestServo.c,29 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
+	R0 <1> <- 1   (midx: 0)
+	CALL _PWM_TIM2_Start   (midx: 0)
+//TestServo.c,30 :: 		}
 2:   (midx: 0)
-//TestServo.c,30 :: 		Delay_ms(1);                             // slow down change pace a little
+//TestServo.c,31 :: 		Delay_ms(1);                             // slow down change pace a little
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -103,7 +98,7 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,31 :: 		}
+//TestServo.c,32 :: 		}
 	goto	0   (midx: 0)
   end
    (midx: 0)

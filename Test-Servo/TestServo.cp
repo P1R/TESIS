@@ -1,4 +1,4 @@
-#line 1 "C:/Users/JorgeAlejandro/Documents/GitHub/TESIS/Test-Servo/TestServo.c"
+#line 1 "C:/Users/p1r0/Desktop/Documents/GitHub/TESIS/Test-Servo/TestServo.c"
 unsigned int current_duty, old_duty, i;
 unsigned int pwm_period1;
 sbit LAMPARA at GPIOC_ODRbits.B8;
@@ -12,21 +12,22 @@ void Conf_puertos(void)
 
 void main() {
  Conf_puertos();
- LAMPARA = 1;
- current_duty =100;
+
+ current_duty =500;
  pwm_period1 = PWM_TIM2_Init(50);
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 
  while (1){
  if(GPIOA_IDR.B0){
- LAMPARA = ~LAMPARA;
+
  Delay_ms(1);
- current_duty = current_duty + 100;
+ current_duty = current_duty + 10;
  if (current_duty > pwm_period1) {
  current_duty = 1;
  }
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
+ PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
  }
  Delay_ms(1);
  }

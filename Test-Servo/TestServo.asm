@@ -23,14 +23,8 @@ _main:
 SUB	SP, SP, #4
 ;TestServo.c,13 :: 		Conf_puertos();
 BL	_Conf_puertos+0
-;TestServo.c,14 :: 		LAMPARA = 1;
-MOVS	R1, #1
-SXTB	R1, R1
-MOVW	R0, #lo_addr(GPIOC_ODRbits+0)
-MOVT	R0, #hi_addr(GPIOC_ODRbits+0)
-STR	R1, [R0, #0]
-;TestServo.c,15 :: 		current_duty =100;                        // initial value for current_duty
-MOVS	R1, #100
+;TestServo.c,15 :: 		current_duty =500;                        // initial value for current_duty
+MOVW	R1, #500
 MOVW	R0, #lo_addr(_current_duty+0)
 MOVT	R0, #hi_addr(_current_duty+0)
 STR	R0, [SP, #0]
@@ -61,12 +55,6 @@ LDR	R0, [R1, #0]
 CMP	R0, #0
 IT	EQ
 BEQ	L_main2
-;TestServo.c,22 :: 		LAMPARA = ~LAMPARA;
-MOVW	R1, #lo_addr(GPIOC_ODRbits+0)
-MOVT	R1, #hi_addr(GPIOC_ODRbits+0)
-LDR	R0, [R1, #0]
-EOR	R0, R0, #1
-STR	R0, [R1, #0]
 ;TestServo.c,23 :: 		Delay_ms(1);
 MOVW	R7, #2665
 MOVT	R7, #0
@@ -77,11 +65,11 @@ SUBS	R7, R7, #1
 BNE	L_main3
 NOP
 NOP
-;TestServo.c,24 :: 		current_duty = current_duty + 100;       // increment current_duty
+;TestServo.c,24 :: 		current_duty = current_duty + 10;       // increment current_duty
 MOVW	R2, #lo_addr(_current_duty+0)
 MOVT	R2, #hi_addr(_current_duty+0)
 LDRH	R0, [R2, #0]
-ADDW	R1, R0, #100
+ADDW	R1, R0, #10
 UXTH	R1, R1
 STRH	R1, [R2, #0]
 ;TestServo.c,25 :: 		if (current_duty > pwm_period1) {      // if we increase current_duty greater then possible pwm_period1 value
@@ -105,9 +93,14 @@ LDRH	R0, [R0, #0]
 MOVS	R2, #1
 MOVS	R1, #0
 BL	_PWM_TIM2_Set_Duty+0
-;TestServo.c,29 :: 		}
+;TestServo.c,29 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+MOVW	R1, #lo_addr(__GPIO_MODULE_TIM2_CH2_PA1+0)
+MOVT	R1, #hi_addr(__GPIO_MODULE_TIM2_CH2_PA1+0)
+MOVS	R0, #1
+BL	_PWM_TIM2_Start+0
+;TestServo.c,30 :: 		}
 L_main2:
-;TestServo.c,30 :: 		Delay_ms(1);                             // slow down change pace a little
+;TestServo.c,31 :: 		Delay_ms(1);                             // slow down change pace a little
 MOVW	R7, #2665
 MOVT	R7, #0
 NOP
@@ -117,10 +110,10 @@ SUBS	R7, R7, #1
 BNE	L_main6
 NOP
 NOP
-;TestServo.c,31 :: 		}
+;TestServo.c,32 :: 		}
 IT	AL
 BAL	L_main0
-;TestServo.c,32 :: 		}
+;TestServo.c,33 :: 		}
 L_end_main:
 L__main_end_loop:
 B	L__main_end_loop
