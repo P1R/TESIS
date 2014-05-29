@@ -1,0 +1,199 @@
+_Foto_ADC_Init:
+  begin   (midx: 0)
+//sensores.h,8 :: 		void Foto_ADC_Init(void){
+_Foto_ADC_Init:
+  begin   (midx: 0)
+//sensores.h,9 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_10|_GPIO_PINMASK_11|_GPIO_PINMASK_12);
+	R1 <4> <- 7168   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+//sensores.h,10 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_13|_GPIO_PINMASK_14|_GPIO_PINMASK_15);
+	R1 <4> <- 57344   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+//sensores.h,11 :: 		GPIO_Analog_input(&GPIOC_BASE,_GPIO_PINMASK_0| _GPIO_PINMASK_1); //PC0 = Canal 10 del ADC1
+	R1 <4> <- 3   (midx: 0)
+	R0 <4> <- #GPIOC_BASE   (midx: 0)
+	CALL _GPIO_Analog_Input   (midx: 0)
+//sensores.h,12 :: 		ADC_Set_Input_Channel(_ADC_CHANNEL_10| _ADC_CHANNEL_11);
+	R0 <2> <- 3072   (midx: 0)
+	CALL _ADC_Set_Input_Channel   (midx: 0)
+//sensores.h,13 :: 		ADC1_Init();
+	CALL _ADC1_Init   (midx: 0)
+  end
+   (midx: 0)
+_FotoA:
+  begin   (midx: 0)
+//sensores.h,16 :: 		float FotoA(void){
+_FotoA:
+  begin   (midx: 0)
+//sensores.h,19 :: 		adc1_valueFR = ADC1_Get_Sample(10);
+	R0 <2> <- 10   (midx: 0)
+	CALL _ADC1_Get_Sample   (midx: 0)
+	R1 <4> <- addr(_adc1_valueFR)   (midx: 0)
+	[R1] <2> <- R0   (midx: 0)
+//sensores.h,20 :: 		voltsFR1 = R*adc1_valueFR;
+	R0 <4> <- (type cast)R0   (midx: 0)
+	R2 <4> <- 7.228327E-004   (midx: 0)
+	R0 <4> <-  R2 * R0   (midx: 8)
+//sensores.h,21 :: 		return voltsFR1;
+	R0 <4> <- R0   (midx: 0)
+	return   (midx: 0)
+  end
+   (midx: 0)
+_FotoB:
+  begin   (midx: 0)
+//sensores.h,24 :: 		float FotoB(void){
+_FotoB:
+  begin   (midx: 0)
+//sensores.h,27 :: 		adc2_valueFR = ADC1_Get_Sample(11);
+	R0 <2> <- 11   (midx: 0)
+	CALL _ADC1_Get_Sample   (midx: 0)
+	R1 <4> <- addr(_adc2_valueFR)   (midx: 0)
+	[R1] <2> <- R0   (midx: 0)
+//sensores.h,28 :: 		voltsFR2 = R*adc2_valueFR;
+	R0 <4> <- (type cast)R0   (midx: 0)
+	R2 <4> <- 7.228327E-004   (midx: 0)
+	R0 <4> <-  R2 * R0   (midx: 8)
+//sensores.h,29 :: 		return voltsFR2;
+	R0 <4> <- R0   (midx: 0)
+	return   (midx: 0)
+  end
+   (midx: 0)
+_Config_ptos:
+  begin   (midx: 0)
+//Test-Sensores.c,34 :: 		void Config_ptos(void){
+_Config_ptos:
+  begin   (midx: 0)
+//Test-Sensores.c,35 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_10|_GPIO_PINMASK_11|_GPIO_PINMASK_12);
+	R1 <4> <- 7168   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+//Test-Sensores.c,36 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_13|_GPIO_PINMASK_14|_GPIO_PINMASK_15);
+	R1 <4> <- 57344   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+  end
+   (midx: 0)
+_Proceso:
+  begin   (midx: 0)
+//Test-Sensores.c,39 :: 		void Proceso(void){
+_Proceso:
+  begin   (midx: 0)
+//Test-Sensores.c,42 :: 		voltsFotoA = FotoA();
+	CALL _FotoA   (midx: 0)
+//Test-Sensores.c,43 :: 		FloatToStr(voltsFotoA,val);
+	R1 <4> <- addr(Proceso_val_L0)   (midx: 0)
+	R1 <4> <- R1   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+	CALL _FloatToStr   (midx: 0)
+//Test-Sensores.c,44 :: 		Lcd_Out(1, 1, val);
+	R0 <4> <- addr(Proceso_val_L0)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+  end
+   (midx: 0)
+_delay:
+  begin   (midx: 0)
+//Test-Sensores.c,57 :: 		void delay(unsigned long contador) // Función para generar retardo
+_delay:
+  begin   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+   (midx: 0)
+//Test-Sensores.c,59 :: 		while(--contador);
+3:   (midx: 0)
+   (midx: 0)
+	R1 <4> <-  R0 - 1   (midx: 2)
+   (midx: 0)
+	R0 <4> <- R1   (midx: 0)
+   (midx: 0)
+	if (!R1) then goto 4   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+	goto	3   (midx: 0)
+4:   (midx: 0)
+  end
+   (midx: 0)
+_Proceso2:
+  begin   (midx: 0)
+//Test-Sensores.c,47 :: 		void Proceso2(void){
+_Proceso2:
+  begin   (midx: 0)
+//Test-Sensores.c,50 :: 		voltsFotoB = FotoB();
+	CALL _FotoB   (midx: 0)
+//Test-Sensores.c,51 :: 		FloatToStr(voltsFotoB,val2);
+	R1 <4> <- addr(Proceso2_val2_L0)   (midx: 0)
+	R1 <4> <- R1   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+	CALL _FloatToStr   (midx: 0)
+//Test-Sensores.c,52 :: 		Lcd_Out(2, 1, val2);
+	R0 <4> <- addr(Proceso2_val2_L0)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 2   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//Test-Sensores.c,53 :: 		delay(0xFFFFF);
+	R0 <4> <- 1048575   (midx: 0)
+	CALL _delay   (midx: 0)
+//Test-Sensores.c,54 :: 		Lcd_Cmd(_LCD_CLEAR);
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+  end
+   (midx: 0)
+_main:
+  begin   (midx: 0)
+//Test-Sensores.c,19 :: 		void main() {
+_main:
+  begin   (midx: 0)
+//Test-Sensores.c,20 :: 		Lcd_Init();
+	CALL _Lcd_Init   (midx: 0)
+//Test-Sensores.c,21 :: 		Foto_ADC_Init();
+	CALL _Foto_ADC_Init   (midx: 0)
+//Test-Sensores.c,22 :: 		Config_ptos();
+	CALL _Config_ptos   (midx: 0)
+//Test-Sensores.c,23 :: 		Lcd_Cmd(_LCD_CLEAR);               // Clear display
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//Test-Sensores.c,24 :: 		Lcd_Out(1, 1, "9CM11-Volmetro");
+	R0 <4> <- #?lstr1_Test_45Sensores   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//Test-Sensores.c,25 :: 		delay_ms(2000);
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 2)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 5)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+	asm: -1   (midx: 1)
+//Test-Sensores.c,26 :: 		Lcd_Cmd(_LCD_CLEAR);
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//Test-Sensores.c,27 :: 		Lcd_Cmd(_LCD_CURSOR_OFF);
+	R0 <1> <- 12   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//Test-Sensores.c,28 :: 		while(1){
+1:   (midx: 0)
+//Test-Sensores.c,29 :: 		Proceso();
+	CALL _Proceso   (midx: 0)
+//Test-Sensores.c,30 :: 		Proceso2();
+	CALL _Proceso2   (midx: 0)
+//Test-Sensores.c,31 :: 		}
+	goto	1   (midx: 0)
+  end
+   (midx: 0)

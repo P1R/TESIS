@@ -33,10 +33,11 @@ Count=0
 [OTHER_FILES]
 Count=0
 [SEARCH_PATH]
-Count=3
+Count=4
 Path0=C:\mikroC PRO for ARM\defs\
-Path1=C:\Users\JorgeAlejandro\Documents\GitHub\TESIS\Test-Sensores\
-Path2=C:\mikroC PRO for ARM\Uses\ST M3\
+Path1=C:\Users\JorgeAlejandro\Documents\GitHub\TESIS\Test-Sensores-0.2\
+Path2=C:\Users\JorgeAlejandro\Documents\GitHub\TESIS\Test-Sensores\
+Path3=C:\mikroC PRO for ARM\Uses\ST M3\
 [HEADER_PATH]
 Count=0
 [HEADERS]
