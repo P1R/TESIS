@@ -1,54 +1,135 @@
 _Conf_puertos:
   begin   (midx: 0)
-//TestServo.c,5 :: 		void Conf_puertos(void)
+//TestServo.c,17 :: 		void Conf_puertos(void)
 _Conf_puertos:
   begin   (midx: 0)
-//TestServo.c,7 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
+//TestServo.c,19 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_10|_GPIO_PINMASK_11|_GPIO_PINMASK_12);
+	R1 <4> <- 7168   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+//TestServo.c,20 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_13|_GPIO_PINMASK_14|_GPIO_PINMASK_15);
+	R1 <4> <- 57344   (midx: 0)
+	R0 <4> <- #GPIOB_BASE   (midx: 0)
+	CALL _GPIO_Digital_Output   (midx: 0)
+//TestServo.c,21 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_0);
 	R1 <4> <- 1   (midx: 0)
 	R0 <4> <- #GPIOA_BASE   (midx: 0)
 	CALL _GPIO_Digital_Input   (midx: 0)
-//TestServo.c,8 :: 		GPIO_Digital_Output(&GPIOC_BASE,_GPIO_PINMASK_8);
+//TestServo.c,22 :: 		GPIO_Digital_Output(&GPIOC_BASE,_GPIO_PINMASK_8);
 	R1 <4> <- 256   (midx: 0)
 	R0 <4> <- #GPIOC_BASE   (midx: 0)
 	CALL _GPIO_Digital_Output   (midx: 0)
   end
    (midx: 0)
+_delay:
+  begin   (midx: 0)
+//TestServo.c,66 :: 		void delay(unsigned long contador) // Función para generar retardo
+_delay:
+  begin   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+   (midx: 0)
+//TestServo.c,68 :: 		while(--contador);
+6:   (midx: 0)
+   (midx: 0)
+	R1 <4> <-  R0 - 1   (midx: 2)
+   (midx: 0)
+	R0 <4> <- R1   (midx: 0)
+   (midx: 0)
+	if (!R1) then goto 7   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+	goto	6   (midx: 0)
+7:   (midx: 0)
+  end
+   (midx: 0)
 _main:
   begin   (midx: 0)
-//TestServo.c,12 :: 		void main() {
+//TestServo.c,26 :: 		void main() {
 _main:
   begin   (midx: 0)
-//TestServo.c,13 :: 		Conf_puertos();
+//TestServo.c,29 :: 		Conf_puertos();
 	CALL _Conf_puertos   (midx: 0)
-//TestServo.c,15 :: 		current_duty =8000;                        // initial value for current_duty
-	R1 <2> <- 8000   (midx: 0)
+//TestServo.c,30 :: 		Lcd_Init();
+	CALL _Lcd_Init   (midx: 0)
+//TestServo.c,31 :: 		Lcd_Cmd(_LCD_CLEAR);
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//TestServo.c,32 :: 		Lcd_Cmd(_LCD_CURSOR_OFF);
+	R0 <1> <- 12   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//TestServo.c,35 :: 		current_duty = 3900;                        // initial value for current_duty
+	R1 <2> <- 3900   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
-	FLOC_main+0 <4> <- R0   (midx: 0)
+	FLOC_main+16 <4> <- R0   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
-//TestServo.c,16 :: 		pwm_period1 = PWM_TIM2_Init(50);
+//TestServo.c,36 :: 		pwm_period1 = PWM_TIM2_Init(50);
 	R0 <4> <- 50   (midx: 0)
 	CALL _PWM_TIM2_Init   (midx: 0)
 	R1 <4> <- addr(_pwm_period1)   (midx: 0)
 	[R1] <2> <- R0   (midx: 0)
-//TestServo.c,17 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
-	R0 <4> <- FLOC_main+0   (midx: 0)
+//TestServo.c,37 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
+	R0 <4> <- FLOC_main+16   (midx: 0)
 	R0 <4> <- R0   (midx: 0)
 	R0 <2> <- [R0]   (midx: 0)
 	R2 <1> <- 1   (midx: 0)
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,18 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
+//TestServo.c,38 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,20 :: 		while (1){
-0:   (midx: 0)
-//TestServo.c,23 :: 		if(current_duty <=8000){
+//TestServo.c,39 :: 		FloatToStr(pwm_period1,val);
+	R0 <4> <- addr(main_val_L0)   (midx: 0)
+	FLOC_main+16 <4> <- R0   (midx: 0)
+	R0 <4> <- addr(_pwm_period1)   (midx: 0)
+	R0 <4> <- (type cast)[R0]   (midx: 0)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- FLOC_main+16   (midx: 0)
+	R1 <4> <- PUSH(R1)   (midx: 255)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- POP   (midx: 255)
+	CALL _FloatToStr   (midx: 0)
+//TestServo.c,40 :: 		FloatToStr(current_duty,val1);
+	R0 <4> <- addr(main_val1_L0)   (midx: 0)
+	FLOC_main+16 <4> <- R0   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
-	R0 <2> <- [R0]   (midx: 0)
-	if ( R0 > 8000) then goto 2   (midx: 1)
-//TestServo.c,24 :: 		Delay_ms(1);
+	R0 <4> <- (type cast)[R0]   (midx: 0)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- FLOC_main+16   (midx: 0)
+	R1 <4> <- PUSH(R1)   (midx: 255)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- POP   (midx: 255)
+	CALL _FloatToStr   (midx: 0)
+//TestServo.c,41 :: 		Lcd_Out(1, 1, val);
+	R0 <4> <- addr(main_val_L0)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//TestServo.c,42 :: 		Lcd_Out(2, 3, val1);
+	R0 <4> <- addr(main_val1_L0)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 3   (midx: 0)
+	R0 <1> <- 2   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//TestServo.c,43 :: 		delay(0xFFFFF);
+	R0 <4> <- 1048575   (midx: 0)
+	CALL _delay   (midx: 0)
+//TestServo.c,44 :: 		while (1){
+0:   (midx: 0)
+//TestServo.c,47 :: 		if(current_duty <=6850){
+	R0 <4> <- addr(_current_duty)   (midx: 0)
+	R1 <2> <- [R0]   (midx: 0)
+	R0 <4> <- 6850   (midx: 0)
+	if ( R1 > R0) then goto 2   (midx: 1)
+//TestServo.c,49 :: 		Delay_ms(1);
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -59,34 +140,60 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,25 :: 		current_duty = current_duty - 10;       // increment current_duty
+//TestServo.c,50 :: 		current_duty = current_duty - 15;       // increment current_duty
 	R2 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R2]   (midx: 0)
-	R1 <2> <-  R0 - 10   (midx: 1)
+	R1 <2> <-  R0 - 15   (midx: 1)
 	[R2] <2> <- R1   (midx: 0)
-//TestServo.c,26 :: 		if (current_duty < 666) {      // if we increase current_duty greater then possible pwm_period1 value
-	R0 <4> <- 666   (midx: 0)
+//TestServo.c,51 :: 		if (current_duty < 1700 ) {      // if we increase current_duty greater then possible pwm_period1 value
+	R0 <4> <- 1700   (midx: 0)
 	if ( R1 >= R0) then goto 4   (midx: 1)
-//TestServo.c,27 :: 		current_duty = 8000;                    // reset current_duty value to zero
-	R1 <2> <- 8000   (midx: 0)
+//TestServo.c,52 :: 		current_duty = 6850;                    // reset current_duty value to zero
+	R1 <2> <- 6850   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
-//TestServo.c,28 :: 		}
+//TestServo.c,53 :: 		}
 4:   (midx: 0)
-//TestServo.c,29 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
+//TestServo.c,54 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R0]   (midx: 0)
 	R2 <1> <- 1   (midx: 0)
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,30 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+//TestServo.c,55 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,31 :: 		}
+//TestServo.c,56 :: 		FloatToStr(current_duty,val1);
+	R0 <4> <- addr(main_val1_L2)   (midx: 0)
+	FLOC_main+16 <4> <- R0   (midx: 0)
+	R0 <4> <- addr(_current_duty)   (midx: 0)
+	R0 <4> <- (type cast)[R0]   (midx: 0)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- FLOC_main+16   (midx: 0)
+	R1 <4> <- PUSH(R1)   (midx: 255)
+	R1 <4> <- R0   (midx: 0)
+	R0 <4> <- POP   (midx: 255)
+	CALL _FloatToStr   (midx: 0)
+//TestServo.c,57 :: 		Lcd_Out(1, 1, val);
+	R0 <4> <- addr(main_val_L0)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//TestServo.c,58 :: 		Lcd_Out(2, 1, val1);
+	R0 <4> <- addr(main_val1_L2)   (midx: 0)
+	R2 <4> <- R0   (midx: 0)
+	R1 <1> <- 1   (midx: 0)
+	R0 <1> <- 2   (midx: 0)
+	CALL _Lcd_Out   (midx: 0)
+//TestServo.c,60 :: 		Lcd_Cmd(_LCD_CLEAR);
+	R0 <1> <- 1   (midx: 0)
+	CALL _Lcd_Cmd   (midx: 0)
+//TestServo.c,61 :: 		}
 2:   (midx: 0)
-//TestServo.c,32 :: 		Delay_ms(1);                             // slow down change pace a little
+//TestServo.c,62 :: 		Delay_ms(1);                 // slow down change pace a little
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -97,7 +204,7 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,33 :: 		}
+//TestServo.c,63 :: 		}
 	goto	0   (midx: 0)
   end
    (midx: 0)

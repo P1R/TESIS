@@ -1,10 +1,18 @@
 main
 	Conf_puertos
-		GPIO_Digital_Input
-			GPIO_Config
-				GPIO_Clk_Enable
 		GPIO_Digital_Output
 			GPIO_Config
+				GPIO_Clk_Enable
+		GPIO_Digital_Input
+			GPIO_Config
+	Lcd_Init
+		GPIO_Config
+		Delay_5500us
+		Delay_1us
+	Lcd_Cmd
+		Delay_1us
+		Delay_5500us
+		Delay_50us
 	PWM_TIM2_Init
 		PWM_TIMx_Init
 			Get_Fosc_kHz
@@ -15,4 +23,14 @@ main
 			GPIO_Alternate_Function_Enable
 				GPIO_Configure_Pin
 					GPIO_Config
+	FloatToStr
+		strcpy
+		_Compare_FP
+		_Mul_FP
+	Lcd_Out
+		Lcd_Cmd
+		Lcd_Chr_CP
+			Lcd_Cmd
+	delay
 	__FillZeros
+	_UnsignedIntegralToFloat
