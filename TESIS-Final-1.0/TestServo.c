@@ -1,4 +1,5 @@
 #include "Sensores.h"
+#include "Comunicacion.h"
 #define Cero    3900  //definimos PWM para 0 grados
 #define Max     6850  //definimos PWM para 90 grados
 #define Min     1700  //definimos PWM para -90 grados
@@ -13,17 +14,20 @@ void Conf_puertos(void)
 
 void main() {
   //se declaran sensores y Umbral de estabilidad
-  float SRVA, SRVB, Ubr = 0.2;
+  float SRVA, SRVB, Ubr = 0.2, CFBV;
   Conf_puertos();  //se configuran los puertos
   Foto_ADC_Init();
+  UART_Inti();
   current_duty = Cero;                        // initial value for current_duty
   pwm_period1 = PWM_TIM2_Init(50);
   PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
   PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 
     while (1){
-    SRVA = fotoA(); //PA2
-    SRVB = fotoB(); //PA3
+    SRVA = fotoA(); //PC0 lectura de ADC
+    SRVB = fotoB(); //PC1 lectura de ADC
+    CFBV = CFBV();  //PC2 Lectura de ADC
+    Transmitir(CFBV);
     //GIRA A UN LADO -90 Grados PA2 mayor
      if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
          if(current_duty <= Min){

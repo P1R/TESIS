@@ -1,17 +1,17 @@
-#line 1 "C:/Users/p1r0/Desktop/Documents/GitHub/TESIS/Test-Servo-0.4/TestServo.c"
-#line 1 "c:/users/p1r0/desktop/documents/github/tesis/test-servo-0.4/sensores.h"
-unsigned int adc1_valueFR, adc2_valueFR;
+#line 1 "C:/Users/JorgeAlejandro/Documents/GitHub/TESIS/TESIS-Final-1.0/TestServo.c"
+#line 1 "c:/users/jorgealejandro/documents/github/tesis/tesis-final-1.0/sensores.h"
+unsigned int adc1_valueFR, adc2_valueFR, adc3_valueCFBV;
 const float R=722.8327228e-6;
+const float RCFBV=769.2307692e-6;
 void Foto_ADC_Init(void);
 float FotoA(void);
 float FotoB(void);
+float CFBV(void);
 
 
 void Foto_ADC_Init(void){
- GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_10|_GPIO_PINMASK_11|_GPIO_PINMASK_12);
- GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_13|_GPIO_PINMASK_14|_GPIO_PINMASK_15);
- GPIO_Analog_input(&GPIOC_BASE,_GPIO_PINMASK_0| _GPIO_PINMASK_1);
- ADC_Set_Input_Channel(_ADC_CHANNEL_10| _ADC_CHANNEL_11);
+ GPIO_Analog_input(&GPIOC_BASE,_GPIO_PINMASK_0| _GPIO_PINMASK_1 | _GPIO_PINMASK_1);
+ ADC_Set_Input_Channel(_ADC_CHANNEL_10| _ADC_CHANNEL_11 | _ADC_CHANNEL_12);
  ADC1_Init();
 }
 
@@ -30,7 +30,27 @@ float FotoB(void){
  voltsFR2 = R*adc2_valueFR;
  return voltsFR2;
 }
-#line 6 "C:/Users/p1r0/Desktop/Documents/GitHub/TESIS/Test-Servo-0.4/TestServo.c"
+
+float CFBV(void){
+ char val3[10];
+ float voltsCFBV;
+ adc3_valueCFBV = ADC1_Get_Sample(12);
+ voltsCFBV = RCFBV*adc2_valueFR;
+ return voltsCFBV;
+}
+#line 1 "c:/users/jorgealejandro/documents/github/tesis/tesis-final-1.0/comunicacion.h"
+void UART_Inti(void){
+ UART1_Init(9600);
+}
+
+void Transmitir( float A){
+ char CFBV[15];
+ FloatToStr(A,CFBV);
+ UART1_Write_Text(CFBV);
+ UART1_Write(13);
+ UART1_Write(10);
+}
+#line 7 "C:/Users/JorgeAlejandro/Documents/GitHub/TESIS/TESIS-Final-1.0/TestServo.c"
 unsigned int current_duty, old_duty, i;
 unsigned int pwm_period1;
 
@@ -41,9 +61,10 @@ void Conf_puertos(void)
 
 void main() {
 
- float SRVA, SRVB, Ubr = 0.2;
+ float SRVA, SRVB, Ubr = 0.2, CFBV;
  Conf_puertos();
  Foto_ADC_Init();
+ UART_Inti();
  current_duty =  3900 ;
  pwm_period1 = PWM_TIM2_Init(50);
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
@@ -52,6 +73,8 @@ void main() {
  while (1){
  SRVA = fotoA();
  SRVB = fotoB();
+ CFBV = CFBV();
+ Transmitir(CFBV);
 
  if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
  if(current_duty <=  1700 ){

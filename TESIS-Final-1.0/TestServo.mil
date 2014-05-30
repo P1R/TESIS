@@ -1,22 +1,14 @@
 _Foto_ADC_Init:
   begin   (midx: 0)
-//sensores.h,8 :: 		void Foto_ADC_Init(void){
+//sensores.h,10 :: 		void Foto_ADC_Init(void){
 _Foto_ADC_Init:
   begin   (midx: 0)
-//sensores.h,9 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_10|_GPIO_PINMASK_11|_GPIO_PINMASK_12);
-	R1 <4> <- 7168   (midx: 0)
-	R0 <4> <- #GPIOB_BASE   (midx: 0)
-	CALL _GPIO_Digital_Output   (midx: 0)
-//sensores.h,10 :: 		GPIO_Digital_Output(&GPIOB_BASE,_GPIO_PINMASK_13|_GPIO_PINMASK_14|_GPIO_PINMASK_15);
-	R1 <4> <- 57344   (midx: 0)
-	R0 <4> <- #GPIOB_BASE   (midx: 0)
-	CALL _GPIO_Digital_Output   (midx: 0)
-//sensores.h,11 :: 		GPIO_Analog_input(&GPIOC_BASE,_GPIO_PINMASK_0| _GPIO_PINMASK_1); //PC0 = Canal 10 del ADC1
+//sensores.h,11 :: 		GPIO_Analog_input(&GPIOC_BASE,_GPIO_PINMASK_0| _GPIO_PINMASK_1 | _GPIO_PINMASK_1); //PC0 = Canal 10 del ADC1
 	R1 <4> <- 3   (midx: 0)
 	R0 <4> <- #GPIOC_BASE   (midx: 0)
 	CALL _GPIO_Analog_Input   (midx: 0)
-//sensores.h,12 :: 		ADC_Set_Input_Channel(_ADC_CHANNEL_10| _ADC_CHANNEL_11);
-	R0 <2> <- 3072   (midx: 0)
+//sensores.h,12 :: 		ADC_Set_Input_Channel(_ADC_CHANNEL_10| _ADC_CHANNEL_11 | _ADC_CHANNEL_12);
+	R0 <2> <- 7168   (midx: 0)
 	CALL _ADC_Set_Input_Channel   (midx: 0)
 //sensores.h,13 :: 		ADC1_Init();
 	CALL _ADC1_Init   (midx: 0)
@@ -60,12 +52,70 @@ _FotoB:
 	return   (midx: 0)
   end
    (midx: 0)
+_CFBV:
+  begin   (midx: 0)
+//sensores.h,32 :: 		float CFBV(void){
+_CFBV:
+  begin   (midx: 0)
+//sensores.h,35 :: 		adc3_valueCFBV = ADC1_Get_Sample(12);
+	R0 <2> <- 12   (midx: 0)
+	CALL _ADC1_Get_Sample   (midx: 0)
+	R1 <4> <- addr(_adc3_valueCFBV)   (midx: 0)
+	[R1] <2> <- R0   (midx: 0)
+//sensores.h,36 :: 		voltsCFBV = RCFBV*adc2_valueFR;
+	R0 <4> <- addr(_adc2_valueFR)   (midx: 0)
+	R0 <4> <- (type cast)[R0]   (midx: 0)
+	R2 <4> <- 7.692308E-004   (midx: 0)
+	R0 <4> <-  R2 * R0   (midx: 8)
+//sensores.h,37 :: 		return voltsCFBV;
+	R0 <4> <- R0   (midx: 0)
+	return   (midx: 0)
+  end
+   (midx: 0)
+_UART_Inti:
+  begin   (midx: 0)
+//comunicacion.h,1 :: 		void UART_Inti(void){
+_UART_Inti:
+  begin   (midx: 0)
+//comunicacion.h,2 :: 		UART1_Init(9600);
+	R0 <4> <- 9600   (midx: 0)
+	CALL _UART1_Init   (midx: 0)
+  end
+   (midx: 0)
+_Transmitir:
+  begin   (midx: 0)
+//comunicacion.h,5 :: 		void Transmitir( float A){
+_Transmitir:
+  begin   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+   (midx: 0)
+//comunicacion.h,7 :: 		FloatToStr(A,CFBV);
+	R1 <4> <- addr(Transmitir_CFBV_L0)   (midx: 0)
+	R1 <4> <- R1   (midx: 0)
+   (midx: 0)
+	R0 <4> <- R0   (midx: 0)
+	CALL _FloatToStr   (midx: 0)
+//comunicacion.h,8 :: 		UART1_Write_Text(CFBV);
+	R1 <4> <- addr(Transmitir_CFBV_L0)   (midx: 0)
+	R0 <4> <- R1   (midx: 0)
+	CALL _UART1_Write_Text   (midx: 0)
+//comunicacion.h,9 :: 		UART1_Write(13);
+	R0 <2> <- 13   (midx: 0)
+	CALL _UART1_Write   (midx: 0)
+//comunicacion.h,10 :: 		UART1_Write(10);
+	R0 <2> <- 10   (midx: 0)
+	CALL _UART1_Write   (midx: 0)
+  end
+   (midx: 0)
 _Conf_puertos:
   begin   (midx: 0)
-//TestServo.c,9 :: 		void Conf_puertos(void)
+//TestServo.c,10 :: 		void Conf_puertos(void)
 _Conf_puertos:
   begin   (midx: 0)
-//TestServo.c,11 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_2 | _GPIO_PINMASK_3);
+//TestServo.c,12 :: 		GPIO_Digital_Input(&GPIOA_BASE,_GPIO_PINMASK_2 | _GPIO_PINMASK_3);
 	R1 <4> <- 12   (midx: 0)
 	R0 <4> <- #GPIOA_BASE   (midx: 0)
 	CALL _GPIO_Digital_Input   (midx: 0)
@@ -73,28 +123,30 @@ _Conf_puertos:
    (midx: 0)
 _main:
   begin   (midx: 0)
-//TestServo.c,14 :: 		void main() {
+//TestServo.c,15 :: 		void main() {
 _main:
   begin   (midx: 0)
-//TestServo.c,16 :: 		float SRVA, SRVB, Ubr = 0.2;
+//TestServo.c,17 :: 		float SRVA, SRVB, Ubr = 0.2, CFBV;
    (midx: 0)
 	R0 <4> <- 0   (midx: 0)
 	main_Ubr_L0 <-initialize(2.000000E-001)   (midx: 0)
-//TestServo.c,17 :: 		Conf_puertos();  //se configuran los puertos
+//TestServo.c,18 :: 		Conf_puertos();  //se configuran los puertos
 	CALL _Conf_puertos   (midx: 0)
-//TestServo.c,18 :: 		Foto_ADC_Init();
+//TestServo.c,19 :: 		Foto_ADC_Init();
 	CALL _Foto_ADC_Init   (midx: 0)
-//TestServo.c,19 :: 		current_duty = Cero;                        // initial value for current_duty
+//TestServo.c,20 :: 		UART_Inti();
+	CALL _UART_Inti   (midx: 0)
+//TestServo.c,21 :: 		current_duty = Cero;                        // initial value for current_duty
 	R1 <2> <- 3900   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	FLOC_main+16 <4> <- R0   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
-//TestServo.c,20 :: 		pwm_period1 = PWM_TIM2_Init(50);
+//TestServo.c,22 :: 		pwm_period1 = PWM_TIM2_Init(50);
 	R0 <4> <- 50   (midx: 0)
 	CALL _PWM_TIM2_Init   (midx: 0)
 	R1 <4> <- addr(_pwm_period1)   (midx: 0)
 	[R1] <2> <- R0   (midx: 0)
-//TestServo.c,21 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
+//TestServo.c,23 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
 	R0 <4> <- FLOC_main+16   (midx: 0)
 	R0 <4> <- R0   (midx: 0)
 	R0 <2> <- [R0]   (midx: 0)
@@ -102,44 +154,49 @@ _main:
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,22 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
+//TestServo.c,24 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,24 :: 		while (1){
+//TestServo.c,26 :: 		while (1){
 0:   (midx: 0)
-//TestServo.c,25 :: 		SRVA = fotoA(); //PA2
+//TestServo.c,27 :: 		SRVA = fotoA(); //PC0 lectura de ADC
 	CALL _FotoA   (midx: 0)
 	main_SRVA_L0 <4> <- R0   (midx: 0)
-//TestServo.c,26 :: 		SRVB = fotoB(); //PA3
+//TestServo.c,28 :: 		SRVB = fotoB(); //PC1 lectura de ADC
 	CALL _FotoB   (midx: 0)
-   (midx: 0)
-	R9 <4> <- R0   (midx: 0)
-//TestServo.c,28 :: 		if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
-	R2 <4> <- main_SRVA_L0   (midx: 0)
-	R0 <1> <-  R2 > R0   (midx: 8)
-	if (!R0) then goto 22   (midx: 0)
+	main_SRVB_L0 <4> <- R0   (midx: 0)
+//TestServo.c,29 :: 		CFBV = CFBV();  //PC2 Lectura de ADC
+	CALL _CFBV   (midx: 0)
+//TestServo.c,30 :: 		Transmitir(CFBV);
+	R0 <4> <- R0   (midx: 0)
+	CALL _Transmitir   (midx: 0)
+//TestServo.c,32 :: 		if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
+	R2 <4> <- main_SRVB_L0   (midx: 0)
 	R0 <4> <- main_SRVA_L0   (midx: 0)
-	R0 <4> <-  R0 - R9   (midx: 8)
+	R0 <1> <-  R0 > R2   (midx: 8)
+	if (!R0) then goto 22   (midx: 0)
+	R2 <4> <- main_SRVB_L0   (midx: 0)
+	R0 <4> <- main_SRVA_L0   (midx: 0)
+	R0 <4> <-  R0 - R2   (midx: 8)
 	R2 <4> <- main_Ubr_L0   (midx: 0)
 	R0 <1> <-  R0 > R2   (midx: 8)
-   (midx: 0)
 	if (!R0) then goto 21   (midx: 0)
 20:   (midx: 0)
-//TestServo.c,29 :: 		if(current_duty <= Min){
+//TestServo.c,33 :: 		if(current_duty <= Min){
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	R1 <2> <- [R0]   (midx: 0)
 	R0 <4> <- 1700   (midx: 0)
 	if ( R1 > R0) then goto 5   (midx: 1)
-//TestServo.c,30 :: 		current_duty = Min;
+//TestServo.c,34 :: 		current_duty = Min;
 	R1 <2> <- 1700   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
-//TestServo.c,31 :: 		goto Manten;
+//TestServo.c,35 :: 		goto Manten;
 	goto	6   (midx: 0)
-//TestServo.c,32 :: 		}
+//TestServo.c,36 :: 		}
 5:   (midx: 0)
-//TestServo.c,34 :: 		Delay_ms(1);
+//TestServo.c,38 :: 		Delay_ms(1);
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -150,52 +207,52 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,35 :: 		current_duty = current_duty - 15;       // increment current_duty
+//TestServo.c,39 :: 		current_duty = current_duty - 15;       // increment current_duty
 	R1 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R1]   (midx: 0)
 	R0 <2> <-  R0 - 15   (midx: 1)
 	[R1] <2> <- R0   (midx: 0)
-//TestServo.c,36 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
+//TestServo.c,40 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 	R0 <2> <- R0   (midx: 0)
 	R2 <1> <- 1   (midx: 0)
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,37 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+//TestServo.c,41 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,39 :: 		}
+//TestServo.c,43 :: 		}
 	goto	9   (midx: 0)
-//TestServo.c,28 :: 		if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
+//TestServo.c,32 :: 		if(SRVA > SRVB && (SRVA-SRVB) > Ubr){
 22:   (midx: 0)
-   (midx: 0)
 21:   (midx: 0)
-//TestServo.c,41 :: 		else if(SRVA < SRVB && (SRVB-SRVA) > Ubr){
+//TestServo.c,45 :: 		else if(SRVA < SRVB && (SRVB-SRVA) > Ubr){
+	R2 <4> <- main_SRVB_L0   (midx: 0)
 	R0 <4> <- main_SRVA_L0   (midx: 0)
-	R0 <1> <-  R0 < R9   (midx: 8)
+	R0 <1> <-  R0 < R2   (midx: 8)
 	if (!R0) then goto 24   (midx: 0)
 	R2 <4> <- main_SRVA_L0   (midx: 0)
-   (midx: 0)
-	R0 <4> <-  R9 - R2   (midx: 8)
+	R0 <4> <- main_SRVB_L0   (midx: 0)
+	R0 <4> <-  R0 - R2   (midx: 8)
 	R2 <4> <- main_Ubr_L0   (midx: 0)
 	R0 <1> <-  R0 > R2   (midx: 8)
 	if (!R0) then goto 23   (midx: 0)
 19:   (midx: 0)
-//TestServo.c,42 :: 		if(current_duty >= Max){
+//TestServo.c,46 :: 		if(current_duty >= Max){
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	R1 <2> <- [R0]   (midx: 0)
 	R0 <4> <- 6850   (midx: 0)
 	if ( R1 < R0) then goto 13   (midx: 1)
-//TestServo.c,43 :: 		current_duty = Max;
+//TestServo.c,47 :: 		current_duty = Max;
 	R1 <2> <- 6850   (midx: 0)
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	[R0] <2> <- R1   (midx: 0)
-//TestServo.c,44 :: 		goto Manten;
+//TestServo.c,48 :: 		goto Manten;
 	goto	6   (midx: 0)
-//TestServo.c,45 :: 		}
+//TestServo.c,49 :: 		}
 13:   (midx: 0)
-//TestServo.c,47 :: 		Delay_ms(1);
+//TestServo.c,51 :: 		Delay_ms(1);
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -206,29 +263,29 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,48 :: 		current_duty = current_duty + 15;       // increment current_duty
+//TestServo.c,52 :: 		current_duty = current_duty + 15;       // increment current_duty
 	R1 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R1]   (midx: 0)
 	R0 <2> <-  R0 + 15   (midx: 1)
 	[R1] <2> <- R0   (midx: 0)
-//TestServo.c,49 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
+//TestServo.c,53 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 	R0 <2> <- R0   (midx: 0)
 	R2 <1> <- 1   (midx: 0)
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,50 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
+//TestServo.c,54 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1); //agregamos que haga el cambio cada vez presionado el boton
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,52 :: 		}
+//TestServo.c,56 :: 		}
 	goto	16   (midx: 0)
-//TestServo.c,41 :: 		else if(SRVA < SRVB && (SRVB-SRVA) > Ubr){
+//TestServo.c,45 :: 		else if(SRVA < SRVB && (SRVB-SRVA) > Ubr){
 24:   (midx: 0)
 23:   (midx: 0)
-//TestServo.c,56 :: 		Manten:
+//TestServo.c,60 :: 		Manten:
 6:   (midx: 0)
-//TestServo.c,57 :: 		Delay_ms(1);
+//TestServo.c,61 :: 		Delay_ms(1);
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -239,21 +296,21 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,58 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
+//TestServo.c,62 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2);
 	R0 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R0]   (midx: 0)
 	R2 <1> <- 1   (midx: 0)
 	R1 <1> <- 0   (midx: 0)
 	R0 <2> <- R0   (midx: 0)
 	CALL _PWM_TIM2_Set_Duty   (midx: 0)
-//TestServo.c,59 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
+//TestServo.c,63 :: 		PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
 	R1 <4> <- #__GPIO_MODULE_TIM2_CH2_PA1   (midx: 0)
 	R0 <1> <- 1   (midx: 0)
 	CALL _PWM_TIM2_Start   (midx: 0)
-//TestServo.c,60 :: 		}
+//TestServo.c,64 :: 		}
 16:   (midx: 0)
 9:   (midx: 0)
-//TestServo.c,61 :: 		Delay_ms(1);                 // slow down change pace a little
+//TestServo.c,65 :: 		Delay_ms(1);                 // slow down change pace a little
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
@@ -264,7 +321,7 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,62 :: 		}
+//TestServo.c,66 :: 		}
 	goto	0   (midx: 0)
   end
    (midx: 0)
