@@ -94,11 +94,11 @@ SUBS	R7, R7, #1
 BNE	L_main7
 NOP
 NOP
-;TestServo.c,31 :: 		current_duty = current_duty - 15;       // increment current_duty
+;TestServo.c,31 :: 		current_duty = current_duty - 5;       // increment current_duty
 MOVW	R1, #lo_addr(_current_duty+0)
 MOVT	R1, #hi_addr(_current_duty+0)
 LDRH	R0, [R1, #0]
-SUBS	R0, #15
+SUBS	R0, R0, #5
 STRH	R0, [R1, #0]
 ;TestServo.c,32 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 MOVS	R2, #1
@@ -168,11 +168,11 @@ SUBS	R7, R7, #1
 BNE	L_main15
 NOP
 NOP
-;TestServo.c,45 :: 		current_duty = current_duty + 15;       // increment current_duty
+;TestServo.c,45 :: 		current_duty = current_duty + 5;       // increment current_duty
 MOVW	R1, #lo_addr(_current_duty+0)
 MOVT	R1, #hi_addr(_current_duty+0)
 LDRH	R0, [R1, #0]
-ADDS	R0, #15
+ADDS	R0, R0, #5
 STRH	R0, [R1, #0]
 ;TestServo.c,46 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 MOVS	R2, #1

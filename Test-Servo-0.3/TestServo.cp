@@ -29,7 +29,7 @@ void main() {
  }
  else{
  Delay_ms(1);
- current_duty = current_duty - 15;
+ current_duty = current_duty - 5;
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
  }
@@ -43,7 +43,7 @@ void main() {
  }
  else{
  Delay_ms(1);
- current_duty = current_duty + 15;
+ current_duty = current_duty + 5;
  PWM_TIM2_Set_Duty(current_duty, _PWM_NON_INVERTED, _PWM_CHANNEL2);
  PWM_TIM2_Start(_PWM_CHANNEL2, &_GPIO_MODULE_TIM2_CH2_PA1);
  }

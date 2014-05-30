@@ -81,10 +81,10 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,31 :: 		current_duty = current_duty - 15;       // increment current_duty
+//TestServo.c,31 :: 		current_duty = current_duty - 5;       // increment current_duty
 	R1 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R1]   (midx: 0)
-	R0 <2> <-  R0 - 15   (midx: 1)
+	R0 <2> <-  R0 - 5   (midx: 1)
 	[R1] <2> <- R0   (midx: 0)
 //TestServo.c,32 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 	R0 <2> <- R0   (midx: 0)
@@ -144,10 +144,10 @@ _main:
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
 	asm: -1   (midx: 1)
-//TestServo.c,45 :: 		current_duty = current_duty + 15;       // increment current_duty
+//TestServo.c,45 :: 		current_duty = current_duty + 5;       // increment current_duty
 	R1 <4> <- addr(_current_duty)   (midx: 0)
 	R0 <2> <- [R1]   (midx: 0)
-	R0 <2> <-  R0 + 15   (midx: 1)
+	R0 <2> <-  R0 + 5   (midx: 1)
 	[R1] <2> <- R0   (midx: 0)
 //TestServo.c,46 :: 		PWM_TIM2_Set_Duty(current_duty,  _PWM_NON_INVERTED, _PWM_CHANNEL2); /// set newly acquired duty ratio
 	R0 <2> <- R0   (midx: 0)
